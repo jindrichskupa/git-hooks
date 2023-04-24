@@ -1,0 +1,19 @@
+#!/bin/bash
+
+modules=$(find . -name "main.tf" | grep -v -e \.terraform -e \.infracost | sed 's/\/main.tf$//' | sort | uniq)
+
+for module in $modules; do
+  echo "Updating docs for $module"
+  if terraform-docs markdown table --output-mode inject "./$module" --output-file "README.md"; then
+    git add "./$module/README.md" || true
+  fi
+done
+
+formated=$(terraform fmt -check -recursive)
+
+for file in  $formated; do
+  terraform fmt $file && git add $file
+done
+
+exit 0
+

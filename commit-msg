@@ -1,0 +1,25 @@
+#!/bin/bash
+
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+NC='\033[0m'
+
+commit_types="(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test|wip|config|mon|update)"
+convetional_commit_regex="^${commit_types}(\([a-z0-9 \-]+\))?!?: .+$"
+
+commit_message=$(cat "$1")
+
+if [[ "$commit_message" =~ $convetional_commit_regex ]]; then
+   echo -e "${GREEN}Commit message meets Conventional Commit standards...${NC}"
+   exit 0
+fi
+
+echo -e "${RED}The commit message does not meet the Conventional Commit standard${NC}"
+echo ""
+echo "Here are the  list of message type : ${commit_types}"
+echo ""
+echo "  <type>: <subject> max 50char ex :- fix: invalid request for login api"
+echo "  <type(<scope>):> <subject> (Max 50 char) - <scope> is option ex: - fix(user): email address is empty on profile api"
+echo ""
+
+exit 1

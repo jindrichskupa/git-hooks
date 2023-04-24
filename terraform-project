@@ -1,0 +1,12 @@
+#!/bin/bash
+
+formated=$(terraform fmt -check -recursive)
+
+for file in  $formated; do
+  terraform fmt $file && git add $file
+done
+
+terraform validate
+
+exit 0
+
